@@ -1,0 +1,30 @@
+trigger: none
+
+pr: none
+
+variables:
+- name: artifactName
+  value: deploy_artifacts
+- name: devEnvironment
+  value: dev
+- name: ResourceGroupName
+  value: ARM_Template
+- name: ResourceGroupLocation
+  value: eastus
+
+stages:
+- stage: Deploy
+  displayName: 'Deploy with what if'
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: ubuntu-18.04
+    steps:
+    - script: |
+    - task: AzurePowerShell@5
+      inputs:
+        azureSubscription: '$(serviceConnection)'
+        ScriptType: 'FilePath'
+        ScriptPath: $(Build.Repository.LocalPath)/scripts/Deploy-azure-resources.ps1
+        ScriptArguments: '-ResourceGroupName $(ResourceGroupName)  -ResourceGroupLocation $(ResourceGroupLocation)'
+        azurePowerShellVersion: 'LatestVersion'
